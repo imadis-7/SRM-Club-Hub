@@ -1,0 +1,59 @@
+
+'use client';
+
+import { useState, useEffect } from 'react';
+import { 
+  Query, 
+  onSnapshot, 
+  QuerySnapshot, 
+  DocumentData
+} from 'firebase/firestore';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
+
+export function useCollection<T = DocumentData>(query: Query<T> | null) {
+  const [data, setData] = useState<T[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (!query) {
+      // Use functional updates to avoid triggering re-renders if state is already correct
+      setLoading(prev => prev === false ? prev : false);
+      setData(prev => (prev.length === 0 ? prev : []));
+      return;
+    }
+
+    setLoading(prev => prev === true ? prev : true);
+
+    const unsubscribe = onSnapshot(
+      query,
+      (snapshot: QuerySnapshot<T>) => {
+        const items = snapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        }));
+        setData(items);
+        setLoading(false);
+      },
+      async (err) => {
+        // Handle listener failure here.
+        const path = (query as any).path || 'Query';
+        const permissionError = new FirestorePermissionError({
+          path: path,
+          operation: 'list',
+        });
+
+        // Emit the error with the global error emitter
+        errorEmitter.emit('permission-error', permissionError);
+
+        setError(err);
+        setLoading(false);
+      }
+    );
+
+    return unsubscribe;
+  }, [query]);
+
+  return { data, loading, error };
+}

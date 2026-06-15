@@ -1,0 +1,129 @@
+
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user of the platform",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "username": { "type": "string", "description": "User's unique login username" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "President", "Vice President", "Secretary", "Member"] },
+        "studentId": { "type": "string", "description": "Unique student identification number" },
+        "classSection": { "type": "string" },
+        "club": { "type": "string", "description": "The ID of the club the user belongs to" },
+        "password": { "type": "string", "description": "Stored password for admin reference" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "username", "role"]
+    },
+    "Club": {
+      "title": "Club",
+      "description": "A club organization",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Meeting": {
+      "title": "Meeting",
+      "description": "A club meeting scheduled in the system",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "club": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "type": { "type": "string", "enum": ["Remote", "In-Person"] },
+        "link": { "type": "string" },
+        "location": { "type": "string" },
+        "attendees": { "type": "number" },
+        "agenda": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "object" }
+      }
+    },
+    "Recap": {
+      "title": "Recap",
+      "description": "AI generated meeting summary",
+      "type": "object",
+      "properties": {
+        "meetingId": { "type": "string" },
+        "summary": { "type": "string" },
+        "discussionPoints": { "type": "array", "items": { "type": "string" } },
+        "actionItems": { "type": "array", "items": { "type": "object" } },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "club": { "type": "string" }
+      }
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "A message sent in the club chat",
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "videoUrl": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "senderPhoto": { "type": "string" },
+        "club": { "type": "string", "description": "Club ID this message belongs to" },
+        "timestamp": { "type": "object" },
+        "isAi": { "type": "boolean" }
+      },
+      "required": ["senderId", "timestamp", "club"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "A student project or task tracked within the hub",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string", "enum": ["Planning", "In Progress", "Review", "Completed"] },
+        "deadline": { "type": "string", "format": "date" },
+        "progress": { "type": "number", "minimum": 0, "maximum": 100 },
+        "club": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "createdAt": { "type": "object" },
+        "updatedAt": { "type": "object" }
+      },
+      "required": ["name", "status", "club", "ownerId"]
+    }
+  },
+  "auth": {
+    "providers": ["password"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and settings"
+    },
+    "/clubs/{clubId}": {
+      "schema": "Club",
+      "description": "Available clubs"
+    },
+    "/meetings/{meetingId}": {
+      "schema": "Meeting",
+      "description": "Collection of scheduled club meetings"
+    },
+    "/recaps/{recapId}": {
+      "schema": "Recap",
+      "description": "Archive of AI-generated meeting recaps"
+    },
+    "/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Club-specific chat messages"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Tracked club projects and tasks"
+    }
+  }
+}

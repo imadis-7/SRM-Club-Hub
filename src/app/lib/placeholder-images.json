@@ -1,0 +1,35 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "club-avatar-1",
+      "description": "Robotics Club meeting",
+      "imageUrl": "https://picsum.photos/seed/roboclub/200/200",
+      "imageHint": "robotics community"
+    },
+    {
+      "id": "club-avatar-2",
+      "description": "Design Club workshop",
+      "imageUrl": "https://picsum.photos/seed/designhub/200/200",
+      "imageHint": "design studio"
+    },
+    {
+      "id": "meeting-hero",
+      "description": "Modern office meeting room",
+      "imageUrl": "https://picsum.photos/seed/meeting/1200/600",
+      "imageHint": "modern office"
+    },
+    {
+      "id": "user-avatar-1",
+      "description": "Alex, club president",
+      "imageUrl": "https://picsum.photos/seed/alex/100/100",
+      "imageHint": "professional person"
+    },
+    {
+      "id": "user-avatar-2",
+      "description": "Jordan, tech lead",
+      "imageUrl": "https://picsum.photos/seed/jordan/100/100",
+      "imageHint": "smiling developer"
+    }
+  ]
+}
